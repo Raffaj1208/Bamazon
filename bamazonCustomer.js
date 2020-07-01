@@ -1,7 +1,8 @@
 //.. Require ..//
 let inquirer = require('inquirer');
 let mysql = require('mysql');
-
+let itemPick = process.argv[0];
+let amountPurchase = process.argv[0];
 //... Create a connection to the  SQL database ..//
 let connection = mysql.createConnection({
     host: 'localhost',
@@ -64,21 +65,18 @@ function askUser()/*A*/{
             console.log('Error.. Error.. Beep Boop Bap');
             return;
         } else {
-            checkInventory();
-            }
+            let chosenItem;
+            for (let i = 0; i < results.length; i++) {
+                if (results[i].item_id === answer.choice) {
+                    chosenItem = results[i];
+                    console.log("Is this working?");
+                }console.log("Is this working?");
+            }console.log("Is this working?");
+        }console.log("Is this working?");
         
     /* C */});
 /* B */ });
 /*A*/};
- function checkInventory(){
-    let chosenItem = (answer.item_id);
-    let amountPurchase = answer.in_stock;
-    if (chosenItem === item_id && amountPurchase < in_stock) {
-        console.log('It Works!');
-    }
- };
-
-
 
 
 /* A. function askUser(){}; 
