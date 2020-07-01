@@ -59,23 +59,7 @@ function askUser()/*A*/{
         message: 'How many are you purchasing?',
         filter: Number   
     }
-]).then(function(answer) {/* B */
-    connection.query('SELECT * FROM products', function(error, response){/* C */
-        if (error){
-            console.log('Error.. Error.. Beep Boop Bap');
-            return;
-        } else {
-            let chosenItem;
-            for (let i = 0; i < results.length; i++) {
-                if (results[i].item_id === answer.choice) {
-                    chosenItem = results[i];
-                    console.log("Is this working?");
-                }console.log("Is this working?");
-            }console.log("Is this working?");
-        }console.log("Is this working?");
-        
-    /* C */});
-/* B */ });
+]).then
 /*A*/};
 
 
