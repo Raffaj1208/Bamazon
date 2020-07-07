@@ -1,86 +1,102 @@
-//.. Require ..//
 let inquirer = require('inquirer');
+let table = require('cli-table2');
 let mysql = require('mysql');
-//... Create a connection to the  SQL database ..//
+
 let connection = mysql.createConnection({
     host: 'localhost',
-    port: 3306,
     user: 'root',
     password: '@Rebirth03',
-    database: 'Bamazon'
+    database: 'bamazon_db',
+    port: 3306
 });
-
-//.. Connect to server and database ..//
-connection.connect(function(error) {
-    if (error){
+connection.connect(function(error){
+    if (error) {
         console.log(error);
     }
-    displayInventory();
+    display();
 });
 
-//.. Create the Function that will display the table created using SQL ..//
-function displayInventory(){
+let display = function() {
     connection.query('SELECT * FROM products', function(error, response) {
         if (error) {
             console.log(error);
         } else {
-            for (let i = 0; i < response.length; i++){
-                console.log('---------------------');
-                console.log('Item #: ' + response[i].item_id);
-                console.log('Item: ' + response[i].product_name);
-                console.log('Department: ' + response[i].department_name);
-                console.log('Price: ' + response[i].price);
-                console.log('Stock: ' + response[i].in_stock);
-            }
-            askUser();
+            console.log('-----------------------------');
+            console.log('-----------------------------');
+            console.log(' Welcome to Bamazon!!');
+            console.log('------------------------------');
+            console.log('Feel free to browse through our inventory!');
+            var Table = require('cli-table2');
+ 
+// instantiate
+var table = new Table({
+    head: ['Id','Description','Department','Cost','Available'],
+    colWidths: [20, 20],
+    colAligns: ['center','left','right'],
+    style: {
+        head: ['aqua'],
+        compact: true
+    }
+});
         }
+        for (let i = 0; i < response.length; i++){
+            table.push([
+        ('Item #: ' + response[i].item_id),
+        ('Item: ' + response[i].product_name),
+        ('Department: ' + response[i].department_name),
+        ('Price: ' + response[i].price),
+        ('Stock: ' + response[i].in_stock),])
+        }
+        console.log(table.toString());
+    });
+shop();
+};
+
+//..
+let shop = function(){
+    inquirer.prompt({
+        name: 'item_id',
+        type: 'input',
+        message: 'What item would you like to purchase?'
+    }).then(function(answer1) {
+        let selection = answer1.productToBuy;
+        connection.query('SELECT * FROM products WHERE = ?', selection, function(error,response) {
+            if (error){
+                console.log(error);
+            }
+            if (response === 0) {
+                console.log('Use your items Id to select it');
+                shop();
+            }
+            else {
+                inquirer.prompt({
+                    name: 'quantity',
+                    type: 'input',
+                    message: 'How many are you purchasing?'
+                }).then(function(answer2) {
+                    let quantity = answer2.quantity;
+                    if (quantity > response[0].in_stock) {
+                        console.log('We apologize but it looks like we only have' + response[0].in_stock + 'available');
+                        shop();
+                    }
+                    else {
+                        console.log(response[0].product_name + 'purchased');
+                        console.log(quantity + 'QTY @ $' + response.price);
+                        let newStock = response[0].in_stock - quantity;
+                        connection.query('UPDATE products SET in_stock =' + newStock + 'WHERE item_id =' + response[0].item_id, function(error, response) {
+                            if (error) {
+                                console.log(error);
+                            }
+                            else {
+                                console.log('Your oder has been processed');
+                                console.log('Thank you for choosing Bamazon');
+                                connection.end();
+                            }
+                        })
+                    }
+                });
+            }
+        });
     });
 };
 
-//..This function will prompt the user to choose an item and purchase quantity
-function askUser() {
-    inquirer.prompt([{
-        type: 'input',
-        name: 'item_id',
-        message: 'Use your items ID number to identify the product you want to purchase',
-        filter: Number
-    },
-    {
-        type: 'input',
-        name: 'amount',
-        message: 'How many are you purchasing?',
-        filter: Number   
-    }
-]).then(function(answer){
-    //.. place order
-});
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* A. function askUser(){}; 
-    // a. function checkInventory();
-        `if there isnt enough prevent order and ALERT
-        `if there is next function runs 
-    // b. function placeBid();
-            `which item 
-            `how many
-    // c. function checkBid();
-            `if the bid is higher than the last
-            `run updateInventory, and ALERT customer cost 
-            `else terminate transaction
-d. function updateInventory(){};*/
