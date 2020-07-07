@@ -48,8 +48,8 @@ var table = new Table({
         ('Stock: ' + response[i].in_stock),])
         }
         console.log(table.toString());
+        shop();
     });
-shop();
 };
 
 //..
