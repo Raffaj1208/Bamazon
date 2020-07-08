@@ -59,8 +59,8 @@ let shop = function(){
         type: 'input',
         message: 'What item would you like to purchase?'
     }).then(function(answer1) {
-        let selection = answer1.productToBuy;
-        connection.query('SELECT * FROM products WHERE = ?', selection, function(error,response) {
+        let selection = answer1.item_id;
+        connection.query('SELECT * FROM products WHERE item_id = ?', selection, function(error,response) {
             if (error){
                 console.log(error);
             }
@@ -81,13 +81,14 @@ let shop = function(){
                     }
                     else {
                         console.log(response[0].product_name + 'purchased');
-                        console.log(quantity + 'QTY @ $' + response.price);
+                        console.log(quantity + 'QTY @ $' + response[0].price);
                         let newStock = response[0].in_stock - quantity;
                         connection.query('UPDATE products SET in_stock =' + newStock + 'WHERE item_id =' + response[0].item_id, function(error, response) {
                             if (error) {
                                 console.log(error);
                             }
                             else {
+                                console.log(response);
                                 console.log('Your oder has been processed');
                                 console.log('Thank you for choosing Bamazon');
                                 connection.end();
