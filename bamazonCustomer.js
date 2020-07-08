@@ -76,14 +76,14 @@ let shop = function(){
                 }).then(function(answer2) {
                     let quantity = answer2.quantity;
                     if (quantity > response[0].in_stock) {
-                        console.log('We apologize but it looks like we only have' + response[0].in_stock + 'available');
+                        console.log('We apologize but it looks like we only have ' + response[0].in_stock + ' available');
                         shop();
                     }
                     else {
-                        console.log(response[0].product_name + 'purchased');
-                        console.log('Your total is:' + quantity * response[0].price);
+                        console.log('Your purchase: ' + response[0].product_name);
+                        console.log('Your total is: ' + quantity * response[0].price);
                         let newStock = response[0].in_stock - quantity;
-                        connection.query('UPDATE products SET in_stock = ?', newStock, /* + 'WHERE item_id = ?' + response[0].item_id,*/ function(error, response) {
+                        connection.query('UPDATE products SET in_stock = ?', newStock,/* 'WHERE item_id = ?', response[0].item_id,*/ function(error, response) {
                             if (error) {
                                 console.log(error);
                             }
