@@ -31,7 +31,7 @@ let display = function() {
 // instantiate
 var table = new Table({
     head: ['Id','Description','Department','Cost','Available'],
-    colWidths: [20, 20],
+    colWidths: [10,15,15,7,7],
     colAligns: ['center','left','right'],
     style: {
         head: ['aqua'],
@@ -41,11 +41,11 @@ var table = new Table({
         }
         for (let i = 0; i < response.length; i++){
             table.push([
-        ('Item #: ' + response[i].item_id),
-        ('Item: ' + response[i].product_name),
-        ('Department: ' + response[i].department_name),
-        ('Price: ' + response[i].price),
-        ('Stock: ' + response[i].in_stock),])
+        (response[i].item_id),
+        (response[i].product_name),
+        (response[i].department_name),
+        (response[i].price),
+        (response[i].in_stock),])
         }
         console.log(table.toString());
         shop();
@@ -81,15 +81,14 @@ let shop = function(){
                     }
                     else {
                         console.log(response[0].product_name + 'purchased');
-                        console.log(quantity + 'QTY @ $' + response[0].price);
+                        console.log('Your total is:' + quantity * response[0].price);
                         let newStock = response[0].in_stock - quantity;
-                        connection.query('UPDATE products SET in_stock =' + newStock + 'WHERE item_id =' + response[0].item_id, function(error, response) {
+                        connection.query('UPDATE products SET in_stock = ?', newStock, /* + 'WHERE item_id = ?' + response[0].item_id,*/ function(error, response) {
                             if (error) {
                                 console.log(error);
                             }
                             else {
-                                console.log(response);
-                                console.log('Your oder has been processed');
+                                console.log('Your order has been processed');
                                 console.log('Thank you for choosing Bamazon');
                                 connection.end();
                             }
