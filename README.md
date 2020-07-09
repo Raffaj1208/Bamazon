@@ -11,4 +11,4 @@
 * Run the command node bamazonCustomer.js in your terminal and you should be able to see the table created in SQL, you will then be prompted for which item and how many of that item
 * Watch as the application calculates your total and reduces the amount of inventory based on the amount and type of object you chose to purchase
 * Enjoy your experience with the application 
-**PS for a nice organized table you should also include the cli table by running the command 'cli-table2' in your terminal
+* PS for a nice organized table you should also include the cli table by running the command 'cli-table2' in your terminal
